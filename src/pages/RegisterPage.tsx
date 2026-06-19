@@ -1,12 +1,26 @@
 import { useState } from "react";
 import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
+import { useNavigate } from 'react-router-dom';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
  const handleRegister = async () => {
-  alert("Registration disabled for UI testing");
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  alert("Account created successfully");
+  navigate("/login");
 };
 
   return (

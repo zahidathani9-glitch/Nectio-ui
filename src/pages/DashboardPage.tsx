@@ -41,9 +41,57 @@ const [photoUrl, setPhotoUrl] = useState("");
   setSkills(data);
 };
 
+
+const fetchProfile = async () => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("user_id", user?.id)
+    .single();
+
+  if (error || !data) return;
+
+  setFullName(data.full_name || "");
+  setDateOfBirth(data.date_of_birth || "");
+  setPronouns(data.pronouns || "");
+  setLocation(data.location || "");
+  setJobTitle(data.job_title || "");
+  setPhone(data.phone || "");
+  setInstagramUrl(data.instagram_url || "");
+  setLinkedinUrl(data.linkedin_url || "");
+  setWebsiteUrl(data.website_url || "");
+  setPhotoUrl(data.photo_url || "");
+  setBio(data.bio || "");
+};
+
+const fetchSelectedSkills = async () => {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("user_id", user?.id)
+    .single();
+
+  if (!profile) return;
+
+  const { data: skillsData } = await supabase
+    .from("profile_skills")
+    .select("skill_id")
+    .eq("profile_id", profile.id);
+
+  if (!skillsData) return;
+
+  setSelectedSkills(
+    skillsData.map((row) => String(row.skill_id))
+  );
+};
+
  useEffect(() => {
-  fetchSkills();
-}, []);
+  if (user) {
+    fetchProfile();
+    fetchSkills();
+    fetchSelectedSkills();
+ }
+ }, [user]);
 
  const handleSaveProfile = async () => {
   console.log("USER:", user);
@@ -93,10 +141,25 @@ const [photoUrl, setPhotoUrl] = useState("");
   console.log("DATA:", data);
   console.log("ERROR:", error);
 
-  if (error) {
-    alert(error.message);
+  if (error || !data) {
+    alert(error?.message || 'Failed to save profile');
     return;
   }
+  const profileId = data.id;
+  await supabase 
+  .from('profile_skills')
+  .delete()
+  .eq('profile_id', profileId);
+
+ const skillRows = selectedSkills.map((skillId) => ({
+  profile_id: profileId,
+  skill_id: skillId,
+}));
+
+await supabase
+  .from("profile_skills")
+  .insert(skillRows);
+
   alert("Profile saved successfully");
 };
 

@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-
+import DiscoverPage from "./pages/DiscoverPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -11,6 +11,8 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 export default function App() {
   return (
     <Routes>
+      <Route path="/discover" element={<DiscoverPage />} />
+      
       <Route path="/" element={<LoginPage />} />
 
       <Route path="/login" element={<LoginPage />} />

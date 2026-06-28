@@ -22,6 +22,10 @@ const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [bio, setBio] = useState("");
   const [skills, setSkills] = useState<any[]>([]);
 const [photoUrl, setPhotoUrl] = useState("");
+const [uploading, setUploading] = useState(false);
+const [networkingGoal, setNetworkingGoal] = useState("");
+const [profileVisibility, setProfileVisibility] =
+  useState("anonymous");
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/login");
@@ -62,6 +66,10 @@ const fetchProfile = async () => {
   setWebsiteUrl(data.website_url || "");
   setPhotoUrl(data.photo_url || "");
   setBio(data.bio || "");
+  setNetworkingGoal(data.networking_goal || "");
+  setProfileVisibility(
+  data.profile_visibility || "anonymous"
+);
 };
 
 const fetchSelectedSkills = async () => {
@@ -92,6 +100,36 @@ const fetchSelectedSkills = async () => {
     fetchSelectedSkills();
  }
  }, [user]);
+
+ const handlePhotoUpload = async (
+  e: React.ChangeEvent<HTMLInputElement>
+) => {
+  const file = e.target.files?.[0];
+
+  if (!file) return;
+
+  setUploading(true);
+
+  const fileName = `${user?.id}/${Date.now()}-${file.name}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("profile-photos")
+    .upload(fileName, file);
+
+  if (uploadError) {
+    alert(uploadError.message);
+    setUploading(false);
+    return;
+  }
+
+  const { data } = supabase.storage
+    .from("profile-photos")
+    .getPublicUrl(fileName);
+
+  setPhotoUrl(data.publicUrl);
+
+  setUploading(false);
+};
 
  const handleSaveProfile = async () => {
   console.log("USER:", user);
@@ -130,6 +168,10 @@ const fetchSelectedSkills = async () => {
   photo_url: photoUrl,
 
   onboarding_completed: true,
+
+  networking_goal: networkingGoal,
+
+  profile_visibility: profileVisibility,
 },
 {
   onConflict: "user_id",
@@ -162,18 +204,59 @@ await supabase
 
   alert("Profile saved successfully");
 };
+const calculateAge = (dob: string) => {
+  const birthDate = new Date(dob);
+  const today = new Date();
+
+  let age =
+    today.getFullYear() -
+    birthDate.getFullYear();
+
+  const monthDiff =
+    today.getMonth() -
+    birthDate.getMonth();
+
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 &&
+      today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+
+  return age;
+};
+{dateOfBirth && (
+  <p className="text-sm text-slate-400">
+    Age: {calculateAge(dateOfBirth)}
+  </p>
+)}
 
   return (
     <div className="min-h-screen bg-slate-950 text-white p-10">
       <div className="max-w-2xl mx-auto">
 
-        <h1 className="text-4xl font-bold mb-2">
-          Welcome to Nectio
-        </h1>
+        <div className="flex items-center gap-4 mb-8">
 
-        <p className="text-slate-400 mb-8">
-          Logged in as: {user?.email}
-        </p>
+  {photoUrl && (
+    <img
+      src={photoUrl}
+      alt="Profile"
+      className="w-20 h-20 rounded-full object-cover border-2 border-slate-700"
+    />
+  )}
+
+  <div>
+    <h1 className="text-6xl text-red-500 font-bold">
+  Welcome to Nectio
+</h1>
+
+    <p className="text-slate-400">
+      Logged in as: {user?.email}
+    </p>
+  </div>
+
+</div>
 
         <div className="space-y-4">
 
@@ -191,6 +274,12 @@ await supabase
     onChange={(e) => setDateOfBirth(e.target.value)}
     className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3"
   />
+
+  {dateOfBirth && (
+  <p className="text-sm text-slate-400">
+    Age: {calculateAge(dateOfBirth)} years
+  </p>
+)}
 
   <select
     value={pronouns}
@@ -221,6 +310,29 @@ await supabase
     onChange={(e) => setJobTitle(e.target.value)}
     className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3"
   />
+  <select
+  value={networkingGoal}
+  onChange={(e) => setNetworkingGoal(e.target.value)}
+  className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3"
+>
+  <option value="">Select Networking Goal</option>
+  <option value="cofounder">Find Co-Founder</option>
+  <option value="investor">Find Investors</option>
+  <option value="developer">Find Developers</option>
+  <option value="designer">Find Designers</option>
+  <option value="mentor">Find Mentors</option>
+  <option value="customers">Find Customers</option>
+</select>
+
+<select
+  value={profileVisibility}
+  onChange={(e) => setProfileVisibility(e.target.value)}
+  className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3"
+>
+  <option value="anonymous">Anonymous</option>
+  <option value="partial">Partial</option>
+  <option value="public">Public</option>
+</select>
 
   <input
     type="tel"
@@ -254,13 +366,26 @@ await supabase
     className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3"
   />
   
+ <div>
+  <label className="block mb-2 font-medium">
+    Profile Photo
+  </label>
+
   <input
-  type="url"
-  placeholder="Profile Photo URL"
-  value={photoUrl}
-  onChange={(e) => setPhotoUrl(e.target.value)}
-  className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3"
-/>
+    type="file"
+    accept="image/png,image/jpeg,image/webp"
+    onChange={handlePhotoUpload}
+    className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3"
+  />
+
+  {uploading && (
+    <p className="text-sm text-slate-400 mt-2">
+      Uploading...
+    </p>
+  )}
+
+  
+</div>
 
   <textarea
     placeholder="Tell us about yourself"
@@ -304,19 +429,26 @@ await supabase
     </div>
   </div>
 
-  <button
-    onClick={handleSaveProfile}
-    className="w-full rounded-xl bg-green-600 py-3 font-semibold hover:bg-green-500"
-  >
-    Save Profile
-  </button>
+ <button
+  onClick={handleSaveProfile}
+  className="w-full rounded-xl bg-green-600 py-3 font-semibold hover:bg-green-500"
+>
+  Save Profile
+</button>
 
-  <button
-    onClick={handleLogout}
-    className="w-full rounded-xl bg-red-600 py-3 font-semibold hover:bg-red-500"
-  >
-    Logout
-  </button>
+<button
+  onClick={() => navigate("/discover")}
+  className="w-full rounded-xl bg-blue-600 py-3 font-semibold hover:bg-blue-500"
+>
+  Discover People
+</button>
+
+<button
+  onClick={handleLogout}
+  className="w-full rounded-xl bg-red-600 py-3 font-semibold hover:bg-red-500"
+>
+  Logout
+</button>
 
       </div>  
     

@@ -9,7 +9,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
  const handleLogin = async () => {
-  const { error } =
+  const { data: authData, error } =
     await supabase.auth.signInWithPassword({
       email,
       password,
@@ -20,7 +20,33 @@ export default function LoginPage() {
     return;
   }
 
-  navigate("/dashboard");
+  const user = authData.user;
+
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("onboarding_completed")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (profileError) {
+    alert(profileError.message);
+    return;
+  }
+
+  // Brand new user → no profile exists yet
+  if (!profile) {
+    navigate("/profile");
+    return;
+  }
+
+  // Existing user but onboarding incomplete
+  if (!profile.onboarding_completed) {
+    navigate("/profile");
+    return;
+  }
+
+  // Existing user with completed onboarding
+  navigate("/home");
 };
   return (
 

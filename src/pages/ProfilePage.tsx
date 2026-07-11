@@ -255,146 +255,166 @@ export default function ProfilePage() {
     navigate("/home");
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white px-6 py-10">
+    <div
+      className="min-h-screen relative overflow-hidden text-white px-6 py-10"
+      style={{ background: "#0a0806" }}
+    >
+      {/* Ambient amber glows — same warm palette as the Landing/Login pages */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(ellipse 900px 550px at 12% 8%, rgba(232,147,74,0.16), transparent 60%),
+            radial-gradient(ellipse 800px 650px at 88% 92%, rgba(232,147,74,0.13), transparent 60%),
+            radial-gradient(ellipse 600px 500px at 50% 45%, rgba(232,147,74,0.05), transparent 70%)
+          `,
+        }}
+      />
 
-      <div className="mb-12 text-center">
+      <div className="relative z-10 mb-12 text-center">
 
-        <h1 className="text-5xl font-bold">
+        <p className="mb-3 text-xs uppercase tracking-[0.35em] text-white/40">
+          Onboarding
+        </p>
+
+        <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-white">
           Complete Your Profile
         </h1>
 
-        <p className="mt-4 text-slate-400">
+        <p className="mt-4 text-white/50 max-w-md mx-auto">
           Help AI understand who you are to recommend meaningful connections.
         </p>
 
       </div>
 
-      <Wizard onFinish={handleSaveProfile}>
+      <div className="relative z-10">
+        <Wizard onFinish={handleSaveProfile}>
 
-        <TextCard
-          title="What's your full name?"
-          subtitle="This is how people will know you."
-          placeholder="John Doe"
-          value={fullName}
-          setValue={setFullName}
-        />
+          <TextCard
+            title="What's your full name?"
+            subtitle="This is how people will know you."
+            placeholder="John Doe"
+            value={fullName}
+            setValue={setFullName}
+          />
 
-        <DateCard
-          title="When were you born?"
-          subtitle="We'll automatically calculate your age."
-          value={dateOfBirth}
-          setValue={setDateOfBirth}
-        />
+          <DateCard
+            title="When were you born?"
+            subtitle="We'll automatically calculate your age."
+            value={dateOfBirth}
+            setValue={setDateOfBirth}
+          />
 
-        <OptionCard
-          title="Choose your pronouns"
-          subtitle="Optional"
-          options={[
-            "he/him",
-            "she/her",
-            "they/them",
-            "prefer_not_to_say",
-          ]}
-          value={pronouns}
-          setValue={setPronouns}
-        />
+          <OptionCard
+            title="Choose your pronouns"
+            subtitle="Optional"
+            options={[
+              "he/him",
+              "she/her",
+              "they/them",
+              "prefer_not_to_say",
+            ]}
+            value={pronouns}
+            setValue={setPronouns}
+          />
 
-        <TextCard
-          title="Where are you located?"
-          subtitle="City or Country"
-          placeholder="Bangalore"
-          value={location}
-          setValue={setLocation}
-        />
+          <TextCard
+            title="Where are you located?"
+            subtitle="City or Country"
+            placeholder="Bangalore"
+            value={location}
+            setValue={setLocation}
+          />
 
-        <TextCard
-          title="What's your profession?"
-          subtitle="Tell everyone what you do."
-          placeholder="Software Engineer"
-          value={jobTitle}
-          setValue={setJobTitle}
-        />
+          <TextCard
+            title="What's your profession?"
+            subtitle="Tell everyone what you do."
+            placeholder="Software Engineer"
+            value={jobTitle}
+            setValue={setJobTitle}
+          />
 
-        <OptionCard
-          title="What are you looking for?"
-          subtitle="Choose one."
-          options={[
-            "cofounder",
-            "investor",
-            "developer",
-            "designer",
-            "mentor",
-            "customers",
-          ]}
-          value={networkingGoal}
-          setValue={setNetworkingGoal}
-        />
+          <OptionCard
+            title="What are you looking for?"
+            subtitle="Choose one."
+            options={[
+              "cofounder",
+              "investor",
+              "developer",
+              "designer",
+              "mentor",
+              "customers",
+            ]}
+            value={networkingGoal}
+            setValue={setNetworkingGoal}
+          />
 
-        <OptionCard
-          title="Profile Visibility"
-          subtitle="Who should see your profile?"
-          options={[
-            "anonymous",
-            "partial",
-            "public",
-          ]}
-          value={profileVisibility}
-          setValue={setProfileVisibility}
-        />
-        <TextCard
-          title="What's your phone number?"
-          subtitle="Optional"
-          placeholder="+91 9876543210"
-          value={phone}
-          setValue={setPhone}
-        />
+          <OptionCard
+            title="Profile Visibility"
+            subtitle="Who should see your profile?"
+            options={[
+              "anonymous",
+              "partial",
+              "public",
+            ]}
+            value={profileVisibility}
+            setValue={setProfileVisibility}
+          />
+          <TextCard
+            title="What's your phone number?"
+            subtitle="Optional"
+            placeholder="+91 9876543210"
+            value={phone}
+            setValue={setPhone}
+          />
 
-        <TextCard
-          title="Instagram Profile"
-          subtitle="Optional"
-          placeholder="https://instagram.com/username"
-          value={instagramUrl}
-          setValue={setInstagramUrl}
-        />
+          <TextCard
+            title="Instagram Profile"
+            subtitle="Optional"
+            placeholder="https://instagram.com/username"
+            value={instagramUrl}
+            setValue={setInstagramUrl}
+          />
 
-        <TextCard
-          title="LinkedIn Profile"
-          subtitle="Optional"
-          placeholder="https://linkedin.com/in/username"
-          value={linkedinUrl}
-          setValue={setLinkedinUrl}
-        />
+          <TextCard
+            title="LinkedIn Profile"
+            subtitle="Optional"
+            placeholder="https://linkedin.com/in/username"
+            value={linkedinUrl}
+            setValue={setLinkedinUrl}
+          />
 
-        <TextCard
-          title="Personal Website"
-          subtitle="Optional"
-          placeholder="https://yourwebsite.com"
-          value={websiteUrl}
-          setValue={setWebsiteUrl}
-        />
+          <TextCard
+            title="Personal Website"
+            subtitle="Optional"
+            placeholder="https://yourwebsite.com"
+            value={websiteUrl}
+            setValue={setWebsiteUrl}
+          />
 
-        <UploadCard
-          uploading={uploading}
-          onUpload={handlePhotoUpload}
-        />
+          <UploadCard
+            uploading={uploading}
+            onUpload={handlePhotoUpload}
+          />
 
-        <TextAreaCard
-          title="Tell us about yourself"
-          subtitle="Help people understand who you are."
-          placeholder="I love building AI products..."
-          value={bio}
-          setValue={setBio}
-        />
+          <TextAreaCard
+            title="Tell us about yourself"
+            subtitle="Help people understand who you are."
+            placeholder="I love building AI products..."
+            value={bio}
+            setValue={setBio}
+          />
 
-        <MultiSelectCard
-          title="Choose your interests"
-          subtitle="Select everything that represents you."
-          skills={skills}
-          selected={selectedSkills}
-          setSelected={setSelectedSkills}
-        />
+          <MultiSelectCard
+            title="Choose your interests"
+            subtitle="Select everything that represents you."
+            skills={skills}
+            selected={selectedSkills}
+            setSelected={setSelectedSkills}
+          />
 
-      </Wizard>
+        </Wizard>
+      </div>
 
     </div>
   );

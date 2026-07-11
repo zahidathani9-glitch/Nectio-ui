@@ -7,6 +7,7 @@ import {
   Settings,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useProfile } from "../../contexts/ProfileContexts";
 
 const menuItems = [
   {
@@ -42,6 +43,7 @@ const menuItems = [
 ];
 
 export default function Sidebar() {
+  const { unreadNotificationCount } = useProfile();
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-slate-800 bg-slate-950 px-6 py-8">
       {/* Logo */}
@@ -71,18 +73,29 @@ export default function Sidebar() {
               key={item.title}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive
-                    ? "bg-green-500 text-white shadow-lg"
-                    : "text-slate-400 hover:bg-slate-900 hover:text-white"
+                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${isActive
+                  ? "bg-green-500 text-white shadow-lg"
+                  : "text-slate-400 hover:bg-slate-900 hover:text-white"
                 }`
               }
             >
               <Icon size={21} />
 
-              <span className="font-medium">
-                {item.title}
-              </span>
+              <div className="flex w-full items-center justify-between">
+                <div className="flex items-center gap-4">
+
+                  <span className="font-medium">
+                    {item.title}
+                  </span>
+                </div>
+
+                {item.title === "Notifications" &&
+                  unreadNotificationCount > 0 && (
+                    <div className="flex h-6 min-w-[24px] items-center justify-center rounded-full bg-red-500 px-2 text-xs font-semibold text-white">
+                      {unreadNotificationCount}
+                    </div>
+                  )}
+              </div>
             </NavLink>
           );
         })}

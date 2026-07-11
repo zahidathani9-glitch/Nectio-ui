@@ -7,6 +7,10 @@ import {
 } from "react";
 
 import { useFeed } from "../hooks/useFeed";
+import {
+  useNotifications,
+  type Notification,
+} from "../hooks/useNotifications";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "./AuthContexts";
 
@@ -36,32 +40,52 @@ type ProfileContextType = {
   profile: Profile | null;
 
   feed: FeedCard[];
+  notifications: Notification[];
 
   loading: boolean;
 
   feedLoading: boolean;
+  notificationsLoading: boolean;
 
   feedError: string | null;
+  notificationsError: string | null;
+
+  unreadNotificationCount: number;
 
   refreshProfile: () => Promise<void>;
 
   refreshFeed: () => Promise<void>;
+
+  refreshNotifications: () => Promise<void>;
+
+  markNotificationAsRead: (
+    notificationId: string
+  ) => Promise<void>;
 };
 
 const ProfileContext = createContext<ProfileContextType>({
   profile: null,
 
   feed: [],
+  notifications: [],
+
+  unreadNotificationCount: 0,
 
   loading: true,
 
   feedLoading: true,
+  notificationsLoading: true,
 
   feedError: null,
+  notificationsError: null,
 
-  refreshProfile: async () => {},
+  refreshProfile: async () => { },
 
-  refreshFeed: async () => {},
+  refreshFeed: async () => { },
+
+  refreshNotifications: async () => { },
+
+  markNotificationAsRead: async () => { },
 });
 
 export const ProfileProvider = ({
@@ -74,12 +98,25 @@ export const ProfileProvider = ({
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
- const {
-  feed,
-  loading: feedLoading,
-  error: feedError,
-  refreshFeed,
-} = useFeed(profile?.id);
+  const {
+    feed,
+    loading: feedLoading,
+    error: feedError,
+    refreshFeed,
+  } = useFeed(profile?.id);
+
+  const {
+    notifications,
+    loading: notificationsLoading,
+    error: notificationsError,
+    markAsRead,
+    refetch: refreshNotifications,
+  } = useNotifications(profile?.id);
+
+
+  const unreadNotificationCount = notifications.filter(
+    (notification) => !notification.isRead
+  ).length;
 
   const refreshProfile = useCallback(async () => {
     if (!user) {
@@ -113,19 +150,29 @@ export const ProfileProvider = ({
   }, [authLoading, refreshProfile]);
 
   return (
-   <ProfileContext.Provider
-  value={{
-    profile,
-    loading,
+    <ProfileContext.Provider
+      value={{
+        profile,
+        loading,
 
-    feed,
-    feedLoading,
-    feedError,
+        feed,
+        feedLoading,
+        feedError,
 
-    refreshProfile,
-    refreshFeed,
-  }}
->
+        notifications,
+        notificationsLoading,
+        notificationsError,
+
+        unreadNotificationCount,
+
+        refreshProfile,
+        refreshFeed,
+
+        refreshNotifications,
+
+        markNotificationAsRead: markAsRead,
+      }}
+    >
       {children}
     </ProfileContext.Provider>
   );

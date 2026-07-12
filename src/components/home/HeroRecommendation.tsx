@@ -1,12 +1,17 @@
 import { Sparkles, ArrowRight, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../../contexts/ProfileContexts";
-
+import { useState } from "react";
+import {
+  ArrowLeft,
+} from "lucide-react";
 
 export default function HeroRecommendation() {
 
   const { feed, feedLoading } = useProfile();
-  const bestMatch = feed[0];
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const currentMatch = feed[currentIndex];
   const navigate = useNavigate();
 
   if (feedLoading) {
@@ -19,7 +24,7 @@ export default function HeroRecommendation() {
     );
   }
 
-  if (!bestMatch) {
+  if (!currentMatch) {
     return (
       <section className="rounded-3xl border border-slate-800 bg-slate-900 p-10">
         <h2 className="text-3xl font-bold text-white">
@@ -59,9 +64,13 @@ export default function HeroRecommendation() {
 
           </div>
 
-          <h1 className="font-display text-5xl font-bold leading-tight text-white">
-            Meet {bestMatch.fullName}
+          <h1 className="min-h-[64px] font-display text-5xl font-bold leading-tight text-white">
+            Meet {currentMatch.fullName}
           </h1>
+
+          <p className="mt-3 text-green-400 font-medium">
+            Recommendation {currentIndex + 1} of {feed.length}
+          </p>
 
           <p className="mt-6 max-w-xl text-lg leading-8 text-slate-400">
 
@@ -90,11 +99,11 @@ export default function HeroRecommendation() {
             <div>
 
               <h2 className="text-4xl font-bold text-white">
-                {Math.round(bestMatch.similarity * 100)}%
+                {Math.round(currentMatch.similarity * 100)}%
               </h2>
 
               <p className="mt-1 text-slate-400">
-                Best Match
+                Match Score
               </p>
 
             </div>
@@ -137,25 +146,25 @@ export default function HeroRecommendation() {
 
             <img
               src={
-                bestMatch.photoUrl ||
+                currentMatch.photoUrl ||
                 "https://placehold.co/80x80?text=User"
               }
-              alt={bestMatch.fullName}
+              alt={currentMatch.fullName}
               className="h-16 w-16 rounded-full object-cover border border-slate-700"
             />
 
             <div>
 
               <h4 className="text-lg font-semibold text-white">
-                {bestMatch.fullName}
+                {currentMatch.fullName}
               </h4>
 
               <p className="text-slate-400">
-                {bestMatch.jobTitle}
+                {currentMatch.jobTitle}
               </p>
 
               <span className="mt-2 inline-flex rounded-full bg-green-500/20 px-3 py-1 text-sm font-semibold text-green-400">
-                {Math.round(bestMatch.similarity * 100)}% Match
+                {Math.round(currentMatch.similarity * 100)}% Match
               </span>
 
             </div>
@@ -167,17 +176,42 @@ export default function HeroRecommendation() {
           </h3>
 
           <p className="mt-5 max-w-xs leading-8 text-slate-400">
-            {bestMatch.reason}
+            {currentMatch.reason}
           </p>
+
+          {/* Navigation */}
+          <div className="mt-8 flex items-center justify-between">
+
+            <button
+              disabled={currentIndex === 0}
+              onClick={() => setCurrentIndex((i) => i - 1)}
+              className="rounded-full border border-slate-700 p-3 text-white transition hover:border-green-400 disabled:opacity-30"
+            >
+              <ArrowLeft size={18} />
+            </button>
+
+            <span className="text-slate-400">
+              {currentIndex + 1} / {feed.length}
+            </span>
+
+            <button
+              disabled={currentIndex === feed.length - 1}
+              onClick={() => setCurrentIndex((i) => i + 1)}
+              className="rounded-full border border-slate-700 p-3 text-white transition hover:border-green-400 disabled:opacity-30"
+            >
+              <ArrowRight size={18} />
+            </button>
+
+          </div>
 
           <div className="mt-8 flex flex-wrap gap-2">
 
             <span className="rounded-full bg-slate-800 px-4 py-2 text-sm text-white">
-              {bestMatch.jobTitle}
+              {currentMatch.jobTitle}
             </span>
 
             <span className="rounded-full bg-slate-800 px-4 py-2 text-sm text-white">
-              {bestMatch.location}
+              {currentMatch.location}
             </span>
 
           </div>

@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import TopNavbar from "./topNavbar";
-import loungeBg from "../../assets/lounge-bg.jpg";
+import loungeBg from "../../Assets/lounge-bg.jpg";
 
 interface AppLayoutProps {
   children: ReactNode;

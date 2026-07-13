@@ -12,7 +12,7 @@ export default function HeroRecommendation() {
 
   if (feedLoading) {
     return (
-      <section className="rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(28,22,18,0.78)] p-6 sm:p-10">
+      <section className="rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(20,14,9,0.6)] backdrop-blur-md p-6 sm:p-10">
         <p className="text-[#B8AA9C]">Finding your AI matches...</p>
       </section>
     );
@@ -20,7 +20,7 @@ export default function HeroRecommendation() {
 
   if (!currentMatch) {
     return (
-      <section className="rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(28,22,18,0.78)] p-6 sm:p-10">
+      <section className="rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(20,14,9,0.6)] backdrop-blur-md p-6 sm:p-10">
         <h2 className="text-2xl sm:text-3xl font-bold text-[#F3E9DE]">No AI Matches Yet</h2>
         <p className="mt-4 text-[#B8AA9C]">
           As more professionals join Nectio, your AI-powered recommendations will appear here.
@@ -30,7 +30,7 @@ export default function HeroRecommendation() {
   }
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(28,22,18,0.78)] p-5 sm:p-8 lg:p-10 shadow-xl">
+    <section className="relative overflow-hidden rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(20,14,9,0.6)] backdrop-blur-md p-5 sm:p-8 lg:p-10 shadow-xl">
       <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-[rgba(255,255,255,0.04)] blur-3xl" />
 
       <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">

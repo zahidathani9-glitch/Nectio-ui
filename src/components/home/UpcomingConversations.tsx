@@ -16,7 +16,7 @@ export default function UpcomingConversations() {
   if (upcoming.length === 0) {
     return (
       <section className="mt-8 sm:mt-10">
-        <div className="rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(28,22,18,0.78)] p-8 text-center text-[#B8AA9C]">
+        <div className="rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(20,14,9,0.6)] backdrop-blur-md p-8 text-center text-[#B8AA9C]">
           No conversations yet. Start one from Discover.
         </div>
       </section>
@@ -44,7 +44,7 @@ export default function UpcomingConversations() {
         </button>
       </div>
 
-      <div className="rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(28,22,18,0.78)]">
+      <div className="rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(20,14,9,0.6)] backdrop-blur-md">
         {upcoming.map((conversation) => (
           <div
             key={conversation.conversationId}

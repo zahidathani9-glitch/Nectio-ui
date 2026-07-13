@@ -95,7 +95,7 @@ export default function ExploreOpportunities() {
             <button
               key={item.title}
               onClick={() => handleClick(item.action)}
-              className="rounded-2xl border border-[rgba(255,255,255,0.1)] bg-[rgba(28,22,18,0.78)] p-5 sm:p-6 text-left transition-all hover:-translate-y-1 hover:border-[rgba(255,255,255,0.3)] hover:shadow-xl"
+              className="rounded-2xl border border-[rgba(255,255,255,0.1)] bg-[rgba(20,14,9,0.6)] backdrop-blur-mdp-5 sm:p-6 text-left transition-all hover:-translate-y-1 hover:border-[rgba(255,255,255,0.3)] hover:shadow-xl"
             >
               <Icon className={`${item.color} mb-4 sm:mb-5`} size={30} />
               <h3 className="text-base sm:text-lg font-semibold text-[#F3E9DE]">

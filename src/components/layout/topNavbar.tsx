@@ -28,11 +28,9 @@ export default function TopNavbar({ isMobileNavOpen, onToggleMobileNav }: TopNav
           </div>
           <div className="hidden sm:block">
             <div className="text-[15px] font-semibold text-[#F3E9DE] leading-tight">
-              Nectio
+              Nectio.AI
             </div>
-            <div className="text-[11px] text-[#B8AA9C] leading-tight">
-              Professional Networking
-            </div>
+           
           </div>
         </div>
 

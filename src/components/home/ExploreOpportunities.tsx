@@ -77,17 +77,17 @@ export default function ExploreOpportunities() {
   };
 
   return (
-    <section className="mt-8 sm:mt-10">
-      <div className="mb-6 sm:mb-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-[#F3E9DE]">
+    <section className="mt-6">
+      <div className="mb-4">
+        <h2 className="text-lg font-bold text-[#F3E9DE]">
           Explore Opportunities
         </h2>
-        <p className="mt-1 sm:mt-2 text-sm sm:text-base text-[#B8AA9C]">
+        <p className="mt-1 text-xs text-[#B8AA9C]">
           Grow your career, startup and professional network.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
         {opportunities.map((item) => {
           const Icon = item.icon;
 
@@ -95,13 +95,13 @@ export default function ExploreOpportunities() {
             <button
               key={item.title}
               onClick={() => handleClick(item.action)}
-              className="rounded-2xl border border-[rgba(255,255,255,0.1)] bg-[rgba(20,14,9,0.6)] backdrop-blur-mdp-5 sm:p-6 text-left transition-all hover:-translate-y-1 hover:border-[rgba(255,255,255,0.3)] hover:shadow-xl"
+              className="rounded-xl border border-[rgba(255,255,255,0.1)] bg-[rgba(20,14,9,0.6)] backdrop-blur-md p-4 text-left transition-all hover:-translate-y-1 hover:border-[rgba(255,255,255,0.3)]"
             >
-              <Icon className={`${item.color} mb-4 sm:mb-5`} size={30} />
-              <h3 className="text-base sm:text-lg font-semibold text-[#F3E9DE]">
+              <Icon className={`${item.color} mb-3`} size={24} />
+              <h3 className="text-sm font-semibold text-[#F3E9DE]">
                 {item.title}
               </h3>
-              <p className="mt-2 sm:mt-3 text-sm leading-6 text-[#B8AA9C]">
+              <p className="mt-1.5 text-xs leading-5 text-[#B8AA9C]">
                 {item.description}
               </p>
             </button>

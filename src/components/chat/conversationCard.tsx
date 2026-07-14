@@ -29,8 +29,10 @@ export default function ConversationCard({
       <div className="flex items-center gap-4">
         <img
           src={
-            conversation.otherUser.photoUrl ??
-            "https://placehold.co/100x100"
+            conversation.otherUser.photoUrl ||
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              conversation.otherUser.fullName
+            )}`
           }
           alt={conversation.otherUser.fullName}
           className="h-14 w-14 flex-shrink-0 rounded-full object-cover border border-[rgba(255,255,255,0.1)]"

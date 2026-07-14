@@ -10,18 +10,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <div className="relative ">
-      {/* Background photo, blurred */}
+    <div className="relative min-h-screen bg-[#0d0906]">
+      {/* Background photo, sharp, no blur */}
       <div
         className="fixed inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${loungeBg})`,
-          filter: "blur(6px)",
-          transform: "scale(1.08)",
-        }}
+        style={{ backgroundImage: `url(${loungeBg})` }}
       />
       {/* Dark overlay for text readability */}
-      <div className="fixed inset-0 bg-[#0d0906]/65" />
+      <div className="fixed inset-0 bg-[#0d0906]/55" />
 
       <div className="relative z-10 flex min-h-screen flex-col">
         <TopNavbar

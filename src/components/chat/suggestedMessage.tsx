@@ -76,5 +76,5 @@ const handleRegenerate = async () => {
       </div>
 
     </div>
-  );
+  )
 }

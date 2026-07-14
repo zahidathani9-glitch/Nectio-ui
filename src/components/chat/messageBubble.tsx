@@ -26,15 +26,19 @@ export default function MessageBubble({
       <div
         className={`max-w-xl rounded-2xl px-5 py-4 ${
           isMine
-            ? "bg-blue-600 text-white"
-            : "bg-slate-800 text-white"
+            ? "bg-[#F3E9DE] text-[#0d0906]"
+            : "bg-[rgba(255,255,255,0.08)] text-[#F3E9DE] border border-[rgba(255,255,255,0.1)]"
         }`}
       >
         <p className="whitespace-pre-wrap leading-7">
           {message.content}
         </p>
 
-        <div className="mt-2 flex items-center justify-between text-xs opacity-70">
+        <div
+          className={`mt-2 flex items-center justify-between text-xs ${
+            isMine ? "text-[#0d0906]/60" : "text-[#B8AA9C]"
+          }`}
+        >
           <span>
             {message.is_ai_generated ? "🤖 AI" : "You"}
           </span>

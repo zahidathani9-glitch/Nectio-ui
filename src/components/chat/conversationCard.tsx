@@ -24,7 +24,7 @@ export default function ConversationCard({
       onClick={() =>
         navigate(`/message/${conversation.conversationId}`)
       }
-      className="w-full rounded-xl border border-slate-800 bg-slate-900 p-4 transition hover:border-slate-700 hover:bg-slate-800"
+      className="w-full rounded-xl border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.04)] p-4 transition hover:border-[rgba(255,255,255,0.25)] hover:bg-[rgba(255,255,255,0.08)]"
     >
       <div className="flex items-center gap-4">
         <img
@@ -33,27 +33,27 @@ export default function ConversationCard({
             "https://placehold.co/100x100"
           }
           alt={conversation.otherUser.fullName}
-          className="h-14 w-14 rounded-full object-cover"
+          className="h-14 w-14 flex-shrink-0 rounded-full object-cover border border-[rgba(255,255,255,0.1)]"
         />
 
-        <div className="flex-1 text-left">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-white">
+        <div className="min-w-0 flex-1 text-left">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="min-w-0 truncate font-semibold text-[#F3E9DE]">
               {conversation.otherUser.fullName}
             </h3>
 
-            <span className="text-xs text-slate-400">
+            <span className="flex-shrink-0 text-xs text-[#8A7C6E]">
               {formattedTime}
             </span>
           </div>
 
-          <p className="mt-1 truncate text-sm text-slate-400">
+          <p className="mt-1 truncate text-sm text-[#B8AA9C]">
             {conversation.lastMessage}
           </p>
         </div>
 
         {conversation.unreadCount > 0 && (
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">
+          <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#F3E9DE] text-xs font-semibold text-[#0d0906]">
             {conversation.unreadCount}
           </div>
         )}

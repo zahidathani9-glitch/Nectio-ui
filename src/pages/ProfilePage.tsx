@@ -272,11 +272,6 @@ export default function ProfilePage() {
       />
 
       <div className="relative z-10 mb-12 text-center">
-
-        <p className="mb-3 text-xs uppercase tracking-[0.35em] text-white/40">
-          Onboarding
-        </p>
-
         <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-white">
           Complete Your Profile
         </h1>

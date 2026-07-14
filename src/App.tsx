@@ -11,7 +11,6 @@ import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import OnboardingRoute from "./components/onboardingRoute";
-import MessagePage from "./pages/MessagePage";
 import MessagesPage from "./pages/MessagesPage";
 import NotificationsPage from "./pages/NotificationPage";
 import AuthCallback from "./pages/AuthCallback";
@@ -57,7 +56,7 @@ export default function App() {
   element={
     <ProtectedRoute>
       <OnboardingRoute>
-        <MessagePage />
+        <MessagesPage />
       </OnboardingRoute>
     </ProtectedRoute>
   }

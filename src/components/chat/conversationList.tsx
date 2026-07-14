@@ -14,7 +14,7 @@ export default function ConversationList({
 }: ConversationListProps) {
   if (loading) {
     return (
-      <div className="p-6 text-slate-400">
+      <div className="p-6 text-[#8f8579]">
         Loading conversations...
       </div>
     );
@@ -30,14 +30,14 @@ export default function ConversationList({
 
   if (conversations.length === 0) {
     return (
-      <div className="p-6 text-slate-400">
+      <div className="p-6 text-[#8f8579]">
         No conversations yet.
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       {conversations.map((conversation) => (
         <ConversationCard
           key={conversation.conversationId}

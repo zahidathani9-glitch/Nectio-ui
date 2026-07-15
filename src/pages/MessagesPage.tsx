@@ -49,7 +49,9 @@ export default function MessagesPage() {
     conversation?.otherUser?.photoUrl ??
     null;
   const showSuggestion =
-    conversation && messages.length === 0 && conversation.firstMessage;
+    conversation &&
+    messages.length === 0 &&
+    conversation.draft_message;
 
   return (
     <div className="relative flex h-full gap-4 rounded-2xl overflow-hidden">
@@ -111,8 +113,8 @@ export default function MessagesPage() {
 
                 {showSuggestion && (
                   <SuggestedMessage
-                    firstMessage={conversation.firstMessage}
-                    conversationId={conversationId}
+                    firstMessage={conversation.draft_message ?? ""}
+                    conversationId={conversationId!}
                     onSend={handleSend}
                   />
                 )}

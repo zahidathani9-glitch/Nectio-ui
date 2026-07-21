@@ -1,11 +1,12 @@
 import type { FeedItem } from "../../types/chat";
+import { MessageCircle } from "lucide-react";
 
 interface ProfileMatchCardProps {
   item: FeedItem;
-  onViewProfile: (item: FeedItem) => void;
+  onMessage: () => void;
 }
 
-export default function ProfileMatchCard({ item, onViewProfile }: ProfileMatchCardProps) {
+export default function ProfileMatchCard({ item, onMessage }: ProfileMatchCardProps) {
   return (
     <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(20,14,9,0.5)] p-3.5 transition hover:border-[rgba(255,255,255,0.2)]">
       <div className="flex items-center gap-3">
@@ -20,16 +21,32 @@ export default function ProfileMatchCard({ item, onViewProfile }: ProfileMatchCa
         </div>
       </div>
 
-      <span className="mt-3 inline-flex rounded-full bg-[rgba(255,255,255,0.1)] px-2.5 py-0.5 text-[11px] font-semibold text-[#F3E9DE]">
-        {Math.round(item.similarity * 100)}% Match
-      </span>
+     {item.reason && (
+  <div className="mt-4">
+    <h5 className="text-sm font-semibold text-[#F3E9DE]">
+      Why AI Recommended This Person
+    </h5>
 
-      <button
-        onClick={() => onViewProfile(item)}
-        className="mt-3 w-full rounded-lg border border-[rgba(255,255,255,0.12)] py-1.5 text-xs font-semibold text-[#F3E9DE] transition hover:bg-[rgba(255,255,255,0.08)]"
-      >
-        View Profile
-      </button>
+    <p className="mt-2 line-clamp-5 text-sm leading-7 text-[#B8AA9C]">
+  {item.reason}
+</p>
+  </div>
+)}
+
+<div className="mt-4 flex items-center justify-between">
+  {item.location && (
+    <span className="rounded-full bg-[rgba(255,255,255,0.08)] px-3 py-1 text-xs text-[#F3E9DE]">
+      📍 {item.location}
+    </span>
+  )}
+
+  <button
+    onClick={onMessage}
+    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[#F3E9DE] transition-all duration-200 hover:border-[#E8934A] hover:bg-[#E8934A]/15 hover:text-[#E8934A]"
+  >
+    <MessageCircle className="h-5 w-5" />
+  </button>
+</div>
     </div>
   );
 }

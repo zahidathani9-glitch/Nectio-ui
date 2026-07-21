@@ -10,7 +10,7 @@ interface ChatPanelProps {
   loadingFeed: boolean;
   onSend: (text: string) => void;
   onNewChat: () => void;
-  onViewProfile: (item: FeedItem) => void;
+  onStartConversation: (item: FeedItem) => void;
   onApprove: (message: ChatMessage) => void;
   onRegenerate: (message: ChatMessage) => void;
   onCancel: (message: ChatMessage) => void;
@@ -22,7 +22,7 @@ export default function ChatPanel({
   loadingFeed,
   onSend,
   onNewChat,
-  onViewProfile,
+  onStartConversation,
   onApprove,
   onRegenerate,
   onCancel,
@@ -66,7 +66,7 @@ export default function ChatPanel({
             key={message.id}
             message={message}
             onActionClick={onSend}
-            onViewProfile={onViewProfile}
+            onStartConversation={onStartConversation}
             onApprove={onApprove}
             onRegenerate={onRegenerate}
             onCancel={onCancel}

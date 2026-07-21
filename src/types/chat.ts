@@ -2,8 +2,10 @@
 // Adjust this to match your actual ProfileContexts type if it differs —
 // it only needs to be structurally compatible.
 export interface FeedItem {
+  profileId: string;
   fullName: string;
   jobTitle?: string;
+  bio?: string;
   location?: string;
   photoUrl?: string;
   reason?: string;
@@ -23,7 +25,6 @@ export interface ChatMessage {
   /** Show the Show Recommendations / Search People / Ask Something chips */
   showActions?: boolean;
   timestamp: number;
-
 approval?: {
   tool: "generateIntroduction";
   status: "pending";

@@ -1,11 +1,16 @@
-import { Flame, Heart, PartyPopper, ThumbsUp } from "lucide-react";
-import ProfileMatchCard from "./profileMatchedCard";
+import {
+  Flame,
+  Heart,
+  PartyPopper,
+  Sparkles,
+  ThumbsUp,
+} from "lucide-react";import ProfileMatchCard from "./profileMatchedCard";
 import type { ChatMessage, FeedItem } from "../../types/chat";
 
 interface ChatMessageBubbleProps {
   message: ChatMessage;
   onActionClick: (text: string) => void;
-  onViewProfile: (item: FeedItem) => void;
+  onStartConversation: (item: FeedItem) => void;
   onApprove: (message: ChatMessage) => void;
   onRegenerate: (message: ChatMessage) => void;
   onCancel: (message: ChatMessage) => void;
@@ -23,7 +28,7 @@ const REACTIONS = [
 export default function ChatMessageBubble({
   message,
   onActionClick,
-  onViewProfile,
+  onStartConversation,
   onApprove,
   onRegenerate,
   onCancel,
@@ -35,30 +40,52 @@ export default function ChatMessageBubble({
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div className="flex w-full max-w-[85%] flex-col gap-3 sm:max-w-[75%]">
-        <div
-          className={`rounded-2xl px-4 py-3 text-sm leading-6 ${
-            isUser
-              ? "ml-auto bg-[#F3E9DE] text-[#0d0906]"
-              : "border border-[rgba(255,255,255,0.08)] bg-[rgba(28,22,18,0.6)] text-[#F3E9DE]"
-          }`}
-        >
-          <p className="whitespace-pre-line">{message.content}</p>
-          {message.prompt && (
-            <p className="mt-1.5 whitespace-pre-line text-[#B8AA9C]">{message.prompt}</p>
-          )}
-        </div>
+        {!hasCards && (
+  <div
+    className={`rounded-2xl px-4 py-3 text-sm leading-6 ${
+      isUser
+        ? "ml-auto bg-[#F3E9DE] text-[#0d0906]"
+        : "border border-[rgba(255,255,255,0.08)] bg-[rgba(28,22,18,0.6)] text-[#F3E9DE]"
+    }`}
+  >
+    <p className="whitespace-pre-line">{message.content}</p>
 
-        {hasCards && (
-          <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
-            {message.cards!.map((item, index) => (
-              <ProfileMatchCard
-                key={`${item.fullName}-${index}`}
-                item={item}
-                onViewProfile={onViewProfile}
-              />
-            ))}
-          </div>
-        )}
+    {message.prompt && (
+      <p className="mt-1.5 whitespace-pre-line text-[#B8AA9C]">
+        {message.prompt}
+      </p>
+    )}
+  </div>
+)}
+
+       {hasCards && (
+  <div className="space-y-4">
+    {/* AI Recommendation Header */}
+    <div className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(28,22,18,0.6)] p-4">
+      <div className="flex items-center gap-2">
+        <Sparkles size={16} className="text-amber-300" />
+        <h3 className="font-semibold text-[#F3E9DE]">
+          AI Recommendations
+        </h3>
+      </div>
+
+      <p className="mt-2 text-sm text-[#B8AA9C]">
+        I found {message.cards?.length} professionals that match your goals.
+      </p>
+    </div>
+
+    {/* Recommendation Cards */}
+    <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
+      {message.cards!.map((item, index) => (
+        <ProfileMatchCard
+          key={`${item.fullName}-${index}`}
+          item={item}
+          onMessage={() => onStartConversation(item)}
+        />
+      ))}
+    </div>
+  </div>
+)}
 
         {hasCards && (
           <div className="flex flex-wrap items-center gap-1.5">

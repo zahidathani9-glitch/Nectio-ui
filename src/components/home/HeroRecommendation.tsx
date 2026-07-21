@@ -92,12 +92,24 @@ const handleNewChat = useCallback(() => {
   setIsThinking(false);
 }, [firstName, STORAGE_KEY]);
 
-  const handleViewProfile = useCallback(
-    (_item: FeedItem) => {
-      navigate("/discover");
-    },
-    [navigate]
-  );
+  const handleStartConversation = useCallback(
+  async (item: FeedItem) => {
+    if (!profile) return;
+
+    try {
+      const conversation = await startConversation(
+        profile.id,
+        item.profileId,
+        "manual"
+      );
+
+      navigate(`/message/${conversation.conversation.id}`);
+    } catch (err) {
+      console.error("Failed to start conversation:", err);
+    }
+  },
+  [profile, navigate]
+);
 
   // Temporary handlers for approval actions. These are placeholders only —
   // wiring them up to real backend logic is out of scope for now.
@@ -198,7 +210,7 @@ navigate(`/message/${conversation.conversation.id}`);
           loadingFeed={feedLoading}
           onSend={handleSend}
           onNewChat={handleNewChat}
-          onViewProfile={handleViewProfile}
+          onStartConversation={handleStartConversation}
           onApprove={handleApprove}
           onRegenerate={handleRegenerate}
           onCancel={handleCancel}

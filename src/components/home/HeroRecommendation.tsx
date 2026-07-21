@@ -10,6 +10,7 @@ import { sendMessageToAgent } from "../../lib/agent";
 import {
   startConversation,
   sendConversationMessage,
+  regenerateAgentIntroduction,
 } from "../../lib/chat";
 // Component name kept as HeroRecommendation so existing imports/routes
 // don't need to change — it now renders the AI networking agent chat
@@ -116,13 +117,53 @@ navigate(`/message/${conversation.conversation.id}`);
     console.error(err);
   }
 }, [profile]);
-  const handleRegenerate = useCallback((message: ChatMessage) => {
-    console.log("regenerate", message);
-  }, []);
+ const handleRegenerate = useCallback(
+  async (message: ChatMessage) => {
+    if (!profile) return;
+    if (!message.approval) return;
+
+    try {
+      const result = await regenerateAgentIntroduction(
+        profile.id,
+        message.approval.payload.personId
+      );
+
+      setMessages(prev =>
+        prev.map(msg =>
+          msg.id === message.id
+            ? {
+                ...msg,
+                approval: {
+                  ...msg.approval!,
+                  payload: {
+                    ...msg.approval!.payload,
+                    draft: result.draft,
+                  },
+                },
+              }
+            : msg
+        )
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  [profile]
+);
 
   const handleCancel = useCallback((message: ChatMessage) => {
-    console.log("cancel", message);
-  }, []);
+  setMessages(prev =>
+    prev.map(msg =>
+      msg.id === message.id
+        ? {
+            ...msg,
+            approval: undefined,
+            content: "❌ Introduction cancelled.",
+          }
+        : msg
+    )
+  );
+}, []);
 
   return (
     <section className="flex flex-col gap-4">

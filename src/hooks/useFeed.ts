@@ -44,7 +44,6 @@ export function useFeed(profileId?: string){
       }
 
       const data = await response.json();
-     console.log("Feed Response:", data);
 
       setFeed(data.feed);
 

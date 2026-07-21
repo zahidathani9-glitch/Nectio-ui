@@ -85,3 +85,28 @@ export async function getConversation(
 
   return await response.json();
 }
+
+export async function regenerateAgentIntroduction(
+  currentProfileId: string,
+  personId: string
+) {
+  const response = await fetch(
+    `${APP_URL}/api/chat/regenerate-agent`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        currentProfileId,
+        personId,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to regenerate introduction");
+  }
+
+  return response.json();
+}

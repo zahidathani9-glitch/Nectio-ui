@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../../contexts/ProfileContexts";
 import ChatPanel from "./chatPanel";
@@ -15,14 +15,36 @@ import {
 // Component name kept as HeroRecommendation so existing imports/routes
 // don't need to change — it now renders the AI networking agent chat
 // instead of the old single-recommendation hero.
+
+
 export default function HeroRecommendation() {
   const { feedLoading, profile } = useProfile();
   const navigate = useNavigate();
 
   const firstName = profile?.full_name?.trim()?.split(" ")[0] || "there";
+  const STORAGE_KEY = profile
+  ? `agent-chat-${profile.id}`
+  : "agent-chat";
 
   const [messages, setMessages] = useState<ChatMessage[]>(() => [buildGreeting(firstName)]);
   const [isThinking, setIsThinking] = useState(false);
+
+
+  useEffect(() => {
+  if (!profile) return;
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+
+  if (saved) {
+    setMessages(JSON.parse(saved));
+  }
+}, [profile, STORAGE_KEY]);
+
+useEffect(() => {
+  if (!profile) return;
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+}, [messages, profile, STORAGE_KEY]);
 
   const handleSend = useCallback(
   async (text: string) => {
@@ -63,10 +85,12 @@ setMessages(prev => [
   [profile]
 );
 
-  const handleNewChat = useCallback(() => {
-    setMessages([buildGreeting(firstName)]);
-    setIsThinking(false);
-  }, [firstName]);
+const handleNewChat = useCallback(() => {
+  localStorage.removeItem(STORAGE_KEY);
+
+  setMessages([buildGreeting(firstName)]);
+  setIsThinking(false);
+}, [firstName, STORAGE_KEY]);
 
   const handleViewProfile = useCallback(
     (_item: FeedItem) => {

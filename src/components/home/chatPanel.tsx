@@ -67,7 +67,7 @@ export default function ChatPanel({
             <ChatMessageBubble
               key={message.id}
               message={message}
-              onActionClick={onSend}
+              onSend={onSend}
               onStartConversation={onStartConversation}
               onApprove={onApprove}
               onRegenerate={onRegenerate}

@@ -1,17 +1,12 @@
-import {
-  Flame,
-  Heart,
-  PartyPopper,
-  Sparkles,
-  ThumbsUp,
-} from "lucide-react";
+import { Sparkles } from "lucide-react";
 import CardCarousel from "./cardCarousel";
 import type { ChatMessage, FeedItem } from "../../types/chat";
 import { motion } from "framer-motion";
 
 interface ChatMessageBubbleProps {
   message: ChatMessage;
-  onActionClick: (text: string) => void;
+  /** Used only by the "Show Recommendations" quick-action on the greeting card. */
+  onSend: (text: string) => void;
   onStartConversation: (item: FeedItem) => void;
   onApprove: (message: ChatMessage) => void;
   onRegenerate: (message: ChatMessage) => void;
@@ -19,18 +14,9 @@ interface ChatMessageBubbleProps {
   onViewProfile: (item: FeedItem) => void;
 }
 
-const ACTIONS = ["Show Recommendations"];
-
-const REACTIONS = [
-  { icon: ThumbsUp, label: "Helpful" },
-  { icon: Heart, label: "Love it" },
-  { icon: PartyPopper, label: "Nice" },
-  { icon: Flame, label: "Great match" },
-];
-
 export default function ChatMessageBubble({
   message,
-  onActionClick,
+  onSend,
   onStartConversation,
   onApprove,
   onRegenerate,
@@ -89,6 +75,19 @@ export default function ChatMessageBubble({
                   <li>&bull;&nbsp;Start conversations</li>
                 </ul>
               </div>
+
+              {/* Quick action */}
+              {message.showActions && (
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() => onSend("Show Recommendations")}
+                    className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-semibold text-[#F3E9DE] hover:border-white/20 hover:bg-white/[0.06] transition-all active:scale-[0.98]"
+                  >
+                    Show Recommendations
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div
@@ -126,49 +125,12 @@ export default function ChatMessageBubble({
               </div>
             </div>
 
-            {/* Carousel */}
+            {/* Single-card arc transition */}
             <CardCarousel
               cards={message.cards!}
               onMessage={(item) => onStartConversation(item)}
               onViewProfile={onViewProfile}
             />
-          </div>
-        )}
-
-        {hasCards && (
-          <div className="flex flex-wrap items-center gap-1.5 pl-1">
-            {REACTIONS.map(({ icon: Icon, label }) => (
-              <button
-                key={label}
-                type="button"
-                aria-label={label}
-                className="rounded-full border border-white/10 p-2 text-[#B8AA9C] hover:border-white/30 hover:bg-white/5 hover:text-[#F3E9DE] transition-all"
-              >
-                <Icon size={12} />
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={() => onActionClick("Tell me more")}
-              className="rounded-full border border-white/10 px-3.5 py-1.5 text-xs text-[#B8AA9C] hover:border-white/30 hover:bg-white/5 hover:text-[#F3E9DE] transition-all font-medium"
-            >
-              Tell me more
-            </button>
-          </div>
-        )}
-
-        {message.showActions && (
-          <div className="flex flex-wrap gap-2 pl-1">
-            {ACTIONS.map((action) => (
-              <button
-                key={action}
-                type="button"
-                onClick={() => onActionClick(action)}
-                className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-semibold text-[#F3E9DE] hover:border-white/20 hover:bg-white/[0.06] transition-all active:scale-[0.98]"
-              >
-                {action}
-              </button>
-            ))}
           </div>
         )}
 

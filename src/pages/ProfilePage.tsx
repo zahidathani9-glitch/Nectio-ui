@@ -144,7 +144,7 @@ export default function ProfilePage() {
     console.log("🔥 handleSaveProfile CALLED");
     console.log("USER:", user);
     console.log("USER ID:", user?.id);
-
+console.log("DOB:", dateOfBirth);
     const { data, error } = await supabase
       .from("profiles")
       .upsert(

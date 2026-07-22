@@ -4,7 +4,6 @@ import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LandingPage from "./pages/landingPage";
-import SettingsPage from "./pages/settingsPage";
 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -82,16 +81,6 @@ export default function App() {
   }
 />
 
-<Route
-  path="/settings"
-  element={
-    <ProtectedRoute>
-      <OnboardingRoute>
-        <SettingsPage />
-      </OnboardingRoute>
-    </ProtectedRoute>
-  }
-/>
 
       <Route
         path="/forgot-password"

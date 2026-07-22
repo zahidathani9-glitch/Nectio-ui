@@ -12,7 +12,6 @@ export function buildGreeting(firstName: string): ChatMessage {
     id: "greeting",
     role: "assistant",
     content: `Hi ${firstName}! 👋\nI'm your AI networking assistant. I can help you discover and connect with the right people.`,
-    prompt: "What would you like to do today?",
     showActions: true,
     timestamp: Date.now(),
   };

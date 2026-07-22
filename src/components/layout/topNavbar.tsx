@@ -1,12 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { House, Search, MessageCircle, User, Menu, X, LogOut } from "lucide-react";
+import { House, MessageCircle, User, Menu, X, LogOut } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useProfile } from "../../contexts/ProfileContexts";
 import { supabase } from "../../lib/supabase";
 
 const navItems = [
   { title: "Home", icon: House, path: "/home" },
-  { title: "Discover", icon: Search, path: "/discover" },
   { title: "Messages", icon: MessageCircle, path: "/messages" },
   { title: "Profile", icon: User, path: "/profile" },
 ];

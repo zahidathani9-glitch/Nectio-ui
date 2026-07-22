@@ -1,5 +1,4 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import DiscoverPage from "./pages/DiscoverPage";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -17,9 +16,8 @@ import AuthCallback from "./pages/AuthCallback";
 export default function App() {
   return (
     <Routes>
-      <Route path="/discover" element={<DiscoverPage />} />
-     <Route
-  path="/home"
+      <Route
+        path="/home"
   element={
     <ProtectedRoute>
       <OnboardingRoute>

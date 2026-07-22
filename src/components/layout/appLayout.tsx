@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   House,
-  Search,
   MessageCircle,
   User,
   LogOut,
@@ -66,7 +65,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   const navItems = [
     { title: "AI Assistant", icon: House, path: "/home" },
-    { title: "Discover", icon: Search, path: "/discover" },
     { title: "Messages", icon: MessageCircle, path: "/messages" },
     { title: "Profile", icon: User, path: "/profile" },
   ];
@@ -301,8 +299,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <span className="text-sm font-semibold tracking-wide text-[#F3E9DE]">
               {location.pathname === "/home"
                 ? "AI Assistant"
-                : location.pathname === "/discover"
-                ? "Discover People"
                 : location.pathname === "/messages"
                 ? "Messages"
                 : location.pathname === "/profile"

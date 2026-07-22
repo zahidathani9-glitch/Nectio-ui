@@ -5,7 +5,7 @@ import {
   Sparkles,
   ThumbsUp,
 } from "lucide-react";
-import ProfileMatchCard from "./profileMatchedCard";
+import CardCarousel from "./cardCarousel";
 import type { ChatMessage, FeedItem } from "../../types/chat";
 import { motion } from "framer-motion";
 
@@ -110,7 +110,7 @@ export default function ChatMessageBubble({
         )}
 
         {hasCards && (
-          <div className="w-full space-y-4">
+          <div className="w-full space-y-5">
             {/* AI Recommendation Header */}
             <div className="rounded-2xl border border-[#E8934A]/25 bg-gradient-to-r from-[#E8934A]/10 to-transparent p-4 flex items-center gap-3">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#E8934A]/15 text-[#E8934A]">
@@ -126,17 +126,12 @@ export default function ChatMessageBubble({
               </div>
             </div>
 
-            {/* Recommendation Cards Grid */}
-            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
-              {message.cards!.map((item, index) => (
-                <ProfileMatchCard
-                  key={`${item.profileId || item.fullName}-${index}`}
-                  item={item}
-                  onMessage={() => onStartConversation(item)}
-                  onViewProfile={onViewProfile}
-                />
-              ))}
-            </div>
+            {/* Carousel */}
+            <CardCarousel
+              cards={message.cards!}
+              onMessage={(item) => onStartConversation(item)}
+              onViewProfile={onViewProfile}
+            />
           </div>
         )}
 

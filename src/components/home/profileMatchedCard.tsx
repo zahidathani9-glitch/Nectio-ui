@@ -1,6 +1,5 @@
 import type { FeedItem } from "../../types/chat";
 import { MessageSquare, User, MapPin, Award } from "lucide-react";
-import { motion } from "framer-motion";
 
 interface ProfileMatchCardProps {
   item: FeedItem;
@@ -16,13 +15,7 @@ export default function ProfileMatchCard({
   const matchScore = Math.round(item.similarity * 100);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.02] p-4 shadow-lg shadow-black/20 hover:border-[#E8934A]/30 hover:bg-white/[0.04] transition-all duration-300"
-    >
+    <div className="flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.02] p-4 shadow-lg shadow-black/20 hover:border-[#E8934A]/30 hover:bg-white/[0.04] transition-colors duration-300 cursor-default">
       <div className="space-y-3">
         {/* Card Header Info */}
         <div className="flex items-start justify-between gap-2.5">
@@ -82,6 +75,6 @@ export default function ProfileMatchCard({
           Message
         </button>
       </div>
-    </motion.div>
+    </div>
   );
 }

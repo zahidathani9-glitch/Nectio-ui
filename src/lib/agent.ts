@@ -62,22 +62,53 @@ const ui = result.ui;
     }
   | undefined;
 
-if (
-  ui?.type === "searchPeople" &&
-  Array.isArray(ui.cards)
-) {
+// --------------------------
+// Extract recommendation cards
+// --------------------------
+
+if (ui && Array.isArray(ui.cards)) {
   cards = ui.cards.map((card: any): FeedItem => ({
-    profileId: card.profile.id,
-    fullName: card.profile.full_name,
-    jobTitle: card.profile.job_title,
-    bio: card.profile.bio,
-    location: card.profile.location,
-    photoUrl: card.profile.photo_url,
+    profileId: card.profile?.id ?? card.profileId,
+    fullName: card.profile?.full_name ?? card.fullName,
+    jobTitle: card.profile?.job_title ?? card.jobTitle,
+    bio: card.profile?.bio ?? card.bio,
+    location: card.profile?.location ?? card.location,
+    photoUrl: card.profile?.photo_url ?? card.photoUrl,
     similarity: card.similarity,
-    reason: card.explanation,
+    reason: card.explanation ?? card.reason,
   }));
 
-  console.log("Mapped cards:", cards);
+  console.log("Mapped UI cards:", cards);
+}
+
+// --------------------------
+// Fallback: extract cards directly from recommendPeople tool
+// --------------------------
+
+if (cards.length === 0) {
+  const recommendTool = messages
+    .flatMap((m: any) => m.content || [])
+    .find(
+      (c: any) =>
+        c.type === "tool-result" &&
+        c.toolName === "recommendPeople" &&
+        c.output?.type === "json"
+    );
+
+  if (recommendTool) {
+    cards = recommendTool.output.value.map((card: any): FeedItem => ({
+      profileId: card.profileId,
+      fullName: card.fullName,
+      jobTitle: card.jobTitle,
+      bio: card.bio,
+      location: card.location,
+      photoUrl: card.photoUrl,
+      similarity: card.similarity,
+      reason: card.reason,
+    }));
+
+    console.log("Mapped Tool cards:", cards);
+  }
 }
 
   const toolMessages = messages.filter((m: any) => m.role === "tool");

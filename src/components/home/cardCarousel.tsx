@@ -68,8 +68,7 @@ export default function CardCarousel({
   return (
     <div className="w-full flex flex-col items-center gap-4 select-none">
       {/* ── Card Stage ─── */}
-      {/* overflow-hidden clips the arc motion so exiting cards don't bleed outside */}
-      <div className="relative w-full flex justify-center overflow-hidden py-2">
+      <div className="relative w-full flex justify-center overflow-visible pt-16 pb-2">
         <AnimatePresence mode="popLayout" initial={false} custom={direction.current}>
           <motion.div
             key={item.profileId || `card-${index}`}

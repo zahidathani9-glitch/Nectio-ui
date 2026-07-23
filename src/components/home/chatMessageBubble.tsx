@@ -44,7 +44,7 @@ export default function ChatMessageBubble({
                   {message.content.split("\n")[0]}
                 </p>
                 <p className="text-xs text-[#B8AA9C] mt-1.5 leading-relaxed">
-                  {message.content.split("\n").slice(1).join(" ").trim()}
+                  I'm your AI networking assistant. I help you discover meaningful people based on your goals, interests, and skills.
                 </p>
               </div>
 
@@ -54,9 +54,9 @@ export default function ChatMessageBubble({
                 <p className="text-xs text-[#B8AA9C]">Ask &rarr; Discover &rarr; Connect</p>
               </div>
 
-              {/* Try */}
+              {/* Try asking */}
               <div className="space-y-1">
-                <h4 className="text-[10px] font-semibold text-[#F3E9DE] uppercase tracking-widest">Try</h4>
+                <h4 className="text-[10px] font-semibold text-[#F3E9DE] uppercase tracking-widest">Try asking</h4>
                 <ul className="text-xs text-[#B8AA9C] space-y-0.5 leading-relaxed">
                   <li>&bull;&nbsp;Show me recommendations</li>
                   <li>&bull;&nbsp;Find React developers</li>
@@ -65,13 +65,30 @@ export default function ChatMessageBubble({
                 </ul>
               </div>
 
+              {/* Card Controls */}
+              <div className="space-y-1.5 rounded-xl border border-[#E8934A]/25 bg-[#E8934A]/10 p-3.5">
+                <h4 className="text-[10px] font-semibold text-[#E8934A] uppercase tracking-widest">Card Controls</h4>
+                <div className="text-xs text-[#F3E9DE]/90 space-y-1 pt-0.5">
+                  <p>📱 <span className="font-semibold text-[#F3E9DE]">Mobile:</span> Long press any recommendation card.</p>
+                  <p>🖥 <span className="font-semibold text-[#F3E9DE]">Desktop:</span> Right click any recommendation card.</p>
+                </div>
+                <div className="border-t border-[#E8934A]/20 pt-2.5 mt-2.5 flex items-center gap-4 text-xs text-[#B8AA9C]">
+                  <span className="flex items-center gap-1.5 font-medium text-[#F3E9DE]">
+                    <span className="text-base">👀</span> View Profile
+                  </span>
+                  <span className="flex items-center gap-1.5 font-medium text-[#F3E9DE]">
+                    <span className="text-base">💬</span> Start Conversation
+                  </span>
+                </div>
+              </div>
+
               {/* I can help you */}
               <div className="space-y-1">
                 <h4 className="text-[10px] font-semibold text-[#F3E9DE] uppercase tracking-widest">I can help you</h4>
                 <ul className="text-xs text-[#B8AA9C] space-y-0.5 leading-relaxed">
                   <li>&bull;&nbsp;Find the right people</li>
                   <li>&bull;&nbsp;Recommend great matches</li>
-                  <li>&bull;&nbsp;Explain recommendations</li>
+                  <li>&bull;&nbsp;Explain every recommendation</li>
                   <li>&bull;&nbsp;Start conversations</li>
                 </ul>
               </div>
@@ -82,7 +99,7 @@ export default function ChatMessageBubble({
                   <button
                     type="button"
                     onClick={() => onSend("Show Recommendations")}
-                    className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-semibold text-[#F3E9DE] hover:border-white/20 hover:bg-white/[0.06] transition-all active:scale-[0.98]"
+                    className="rounded-xl border border-[#E8934A]/30 bg-[#E8934A]/10 px-3.5 py-2 text-xs font-semibold text-[#F3E9DE] hover:border-[#E8934A]/50 hover:bg-[#E8934A]/20 transition-all active:scale-[0.98]"
                   >
                     Show Recommendations
                   </button>

@@ -33,7 +33,7 @@ export interface ProfileOnboardingFields {
   location: string;
   jobTitle: string;
   networkingGoal: string;
-  profileVisibility: string;
+  photoUrl: string;
   selectedSkills: string[];
 }
 
@@ -62,8 +62,8 @@ export function validateOnboardingData(data: ProfileOnboardingFields): string | 
     return "Please select what you are looking for.";
   }
 
-  if (!sanitizeString(data.profileVisibility)) {
-    return "Please select profile visibility.";
+  if (!sanitizeString(data.photoUrl)) {
+    return "Please upload a profile photo.";
   }
 
   if (!Array.isArray(data.selectedSkills) || data.selectedSkills.length < 3) {

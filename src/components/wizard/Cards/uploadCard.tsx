@@ -4,18 +4,32 @@ import type { ChangeEvent } from "react";
 
 interface Props {
   uploading: boolean;
+  photoUrl?: string;
   onUpload: (e: ChangeEvent<HTMLInputElement>) => void;
   /** Injected by Wizard — not passed by ProfilePage. */
   nav?: NavProps;
 }
 
-export default function UploadCard({ uploading, onUpload, nav }: Props) {
+export default function UploadCard({ uploading, photoUrl, onUpload, nav }: Props) {
   return (
     <QuestionCard
       title="Upload your profile photo"
       subtitle="This helps people recognize you."
       nav={nav}
     >
+      {photoUrl ? (
+        <div className="flex flex-col items-center gap-4">
+          <img
+            src={photoUrl}
+            alt="Profile photo"
+            className="h-24 w-24 rounded-full object-cover border-2 border-white/20"
+          />
+          <p className="text-sm text-white/50">
+            Photo uploaded. You can replace it below.
+          </p>
+        </div>
+      ) : null}
+
       <input
         type="file"
         accept="image/png,image/jpeg,image/webp"
@@ -45,6 +59,7 @@ export default function UploadCard({ uploading, onUpload, nav }: Props) {
           file:duration-200
           hover:file:brightness-110
         "
+        style={photoUrl ? { marginTop: "1rem" } : undefined}
       />
 
       {uploading && (

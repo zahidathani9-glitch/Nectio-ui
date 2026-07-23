@@ -29,9 +29,7 @@ export default function ProfilePage() {
   const [jobTitle, setJobTitle] = useState("");
 
   const [phone, setPhone] = useState("");
-  const [instagramUrl, setInstagramUrl] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
-  const [websiteUrl, setWebsiteUrl] = useState("");
 
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [bio, setBio] = useState("");
@@ -39,9 +37,6 @@ export default function ProfilePage() {
   const [photoUrl, setPhotoUrl] = useState("");
   const [uploading, setUploading] = useState(false);
   const [networkingGoal, setNetworkingGoal] = useState("");
-  const [profileVisibility, setProfileVisibility] =
-    useState("anonymous");
-
 
   const { refreshProfile } = useProfile();
 
@@ -50,7 +45,6 @@ export default function ProfilePage() {
       .from("skills")
       .select("*");
 
-
     if (error) {
       console.log(error);
       return;
@@ -58,7 +52,6 @@ export default function ProfilePage() {
 
     setSkills(data);
   };
-
 
   const fetchProfile = async () => {
     const { data, error } = await supabase
@@ -75,15 +68,10 @@ export default function ProfilePage() {
     setLocation(data.location || "");
     setJobTitle(data.job_title || "");
     setPhone(data.phone || "");
-    setInstagramUrl(data.instagram_url || "");
     setLinkedinUrl(data.linkedin_url || "");
-    setWebsiteUrl(data.website_url || "");
     setPhotoUrl(data.photo_url || "");
     setBio(data.bio || "");
     setNetworkingGoal(data.networking_goal || "");
-    setProfileVisibility(
-      data.profile_visibility || "anonymous"
-    );
   };
 
   const fetchSelectedSkills = async () => {
@@ -158,7 +146,7 @@ export default function ProfilePage() {
       location,
       jobTitle,
       networkingGoal,
-      profileVisibility,
+      photoUrl,
       selectedSkills,
     });
 
@@ -173,14 +161,11 @@ export default function ProfilePage() {
     const sanitizedLocation = sanitizeString(location)!;
     const sanitizedJobTitle = sanitizeString(jobTitle)!;
     const sanitizedNetworkingGoal = sanitizeString(networkingGoal)!;
-    const sanitizedProfileVisibility = sanitizeString(profileVisibility)!;
 
     // Optional fields: converted to null if empty
     const sanitizedPronouns = sanitizeString(pronouns);
     const sanitizedPhone = sanitizeString(phone);
-    const sanitizedInstagram = sanitizeString(instagramUrl);
     const sanitizedLinkedin = sanitizeString(linkedinUrl);
-    const sanitizedWebsite = sanitizeString(websiteUrl);
     const sanitizedBio = sanitizeString(bio);
     const sanitizedPhotoUrl = sanitizeString(photoUrl);
 
@@ -199,14 +184,11 @@ export default function ProfilePage() {
             job_title: sanitizedJobTitle,
             email: user.email || null,
             phone: sanitizedPhone,
-            instagram_url: sanitizedInstagram,
             linkedin_url: sanitizedLinkedin,
-            website_url: sanitizedWebsite,
             bio: sanitizedBio,
             photo_url: sanitizedPhotoUrl,
             onboarding_completed: true,
             networking_goal: sanitizedNetworkingGoal,
-            profile_visibility: sanitizedProfileVisibility,
           },
           {
             onConflict: "user_id",
@@ -332,7 +314,7 @@ export default function ProfilePage() {
               "he/him",
               "she/her",
               "they/them",
-              "prefer_not_to_say",
+              "prefer not to say",
             ]}
             value={pronouns}
             setValue={setPronouns}
@@ -369,31 +351,12 @@ export default function ProfilePage() {
             setValue={setNetworkingGoal}
           />
 
-          <OptionCard
-            title="Profile Visibility"
-            subtitle="Who should see your profile?"
-            options={[
-              "anonymous",
-              "partial",
-              "public",
-            ]}
-            value={profileVisibility}
-            setValue={setProfileVisibility}
-          />
           <TextCard
             title="What's your phone number?"
             subtitle="Optional"
             placeholder="+91 9876543210"
             value={phone}
             setValue={setPhone}
-          />
-
-          <TextCard
-            title="Instagram Profile"
-            subtitle="Optional"
-            placeholder="https://instagram.com/username"
-            value={instagramUrl}
-            setValue={setInstagramUrl}
           />
 
           <TextCard
@@ -404,16 +367,9 @@ export default function ProfilePage() {
             setValue={setLinkedinUrl}
           />
 
-          <TextCard
-            title="Personal Website"
-            subtitle="Optional"
-            placeholder="https://yourwebsite.com"
-            value={websiteUrl}
-            setValue={setWebsiteUrl}
-          />
-
           <UploadCard
             uploading={uploading}
+            photoUrl={photoUrl}
             onUpload={handlePhotoUpload}
           />
 

@@ -12,6 +12,11 @@ import OptionCard from "../components/wizard/Cards/optionCard";
 import MultiSelectCard from "../components/wizard/Cards/multiSelectCard";
 import UploadCard from "../components/wizard/Cards/uploadCard";
 import TextAreaCard from "../components/wizard/Cards/textAreaCard";
+import {
+  sanitizeString,
+  sanitizeDate,
+  validateOnboardingData,
+} from "../utils/sanitization";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -141,119 +146,139 @@ export default function ProfilePage() {
   };
 
   const handleSaveProfile = async () => {
-    console.log("🔥 handleSaveProfile CALLED");
-    console.log("USER:", user);
-    console.log("USER ID:", user?.id);
-console.log("DOB:", dateOfBirth);
-    const { data, error } = await supabase
-      .from("profiles")
-      .upsert(
-        {
-          user_id: user?.id,
-
-          nectio_id: `NECTIO-${user?.id?.slice(0, 8)}`,
-
-          full_name: fullName,
-
-          date_of_birth: dateOfBirth,
-
-          pronouns: pronouns,
-
-          location: location,
-
-          job_title: jobTitle,
-
-          email: user?.email,
-
-          phone: phone,
-
-          instagram_url: instagramUrl,
-
-          linkedin_url: linkedinUrl,
-
-          website_url: websiteUrl,
-
-          bio: bio,
-
-          photo_url: photoUrl,
-
-          onboarding_completed: true,
-
-          networking_goal: networkingGoal,
-
-          profile_visibility: profileVisibility,
-        },
-        {
-          onConflict: "user_id",
-        }
-      )
-      .select()
-      .single();
-
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
-
-    if (error || !data) {
-      alert(error?.message || 'Failed to save profile');
+    if (!user?.id) {
+      alert("Authentication session lost. Please log in again.");
       return;
     }
-    const profileId = data.id;
 
-    console.log("1️⃣ Profile saved:", profileId);
-
-    const { error: deleteError } = await supabase
-      .from("profile_skills")
-      .delete()
-      .eq("profile_id", profileId);
-
-    console.log("2️⃣ Delete Error:", deleteError);
-
-    console.log("Selected Skills:", selectedSkills);
-    console.log("Selected Skills Length:", selectedSkills.length);
-
-    const skillRows = selectedSkills.map((skillId) => ({
-      profile_id: profileId,
-      skill_id: skillId,
-    }));
-    console.log("Skill Rows:", skillRows);
-
-    const { error: insertError } = await supabase
-      .from("profile_skills")
-      .insert(skillRows);
-
-    console.log("3️⃣ Insert Error:", insertError);
-
-    console.log("4️⃣ Calling sync-ai...");
-
-    const response = await fetch(`${APP_URL}/api/profile/sync-ai`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        profileId,
-      }),
+    // 1. Validate required fields before submitting to Supabase
+    const validationError = validateOnboardingData({
+      fullName,
+      dateOfBirth,
+      location,
+      jobTitle,
+      networkingGoal,
+      profileVisibility,
+      selectedSkills,
     });
 
-    console.log("5️⃣ Sync Status:", response.status);
-
-    const result = await response.json();
-
-    console.log("6️⃣ Sync Response:", result);
-
-    if (!response.ok) {
-      alert(result.error ?? "Failed to sync AI profile.");
+    if (validationError) {
+      alert(validationError);
       return;
     }
 
-    console.log("7️⃣ Refreshing profile...");
+    // 2. Sanitize all required and optional fields
+    const sanitizedFullName = sanitizeString(fullName)!;
+    const sanitizedDob = sanitizeDate(dateOfBirth)!;
+    const sanitizedLocation = sanitizeString(location)!;
+    const sanitizedJobTitle = sanitizeString(jobTitle)!;
+    const sanitizedNetworkingGoal = sanitizeString(networkingGoal)!;
+    const sanitizedProfileVisibility = sanitizeString(profileVisibility)!;
 
-    await refreshProfile();
+    // Optional fields: converted to null if empty
+    const sanitizedPronouns = sanitizeString(pronouns);
+    const sanitizedPhone = sanitizeString(phone);
+    const sanitizedInstagram = sanitizeString(instagramUrl);
+    const sanitizedLinkedin = sanitizeString(linkedinUrl);
+    const sanitizedWebsite = sanitizeString(websiteUrl);
+    const sanitizedBio = sanitizeString(bio);
+    const sanitizedPhotoUrl = sanitizeString(photoUrl);
 
-    console.log("8️⃣ Navigating home...");
+    try {
+      // 3. Upsert sanitized profile data to Supabase
+      const { data, error } = await supabase
+        .from("profiles")
+        .upsert(
+          {
+            user_id: user.id,
+            nectio_id: `NECTIO-${user.id.slice(0, 8)}`,
+            full_name: sanitizedFullName,
+            date_of_birth: sanitizedDob,
+            pronouns: sanitizedPronouns,
+            location: sanitizedLocation,
+            job_title: sanitizedJobTitle,
+            email: user.email || null,
+            phone: sanitizedPhone,
+            instagram_url: sanitizedInstagram,
+            linkedin_url: sanitizedLinkedin,
+            website_url: sanitizedWebsite,
+            bio: sanitizedBio,
+            photo_url: sanitizedPhotoUrl,
+            onboarding_completed: true,
+            networking_goal: sanitizedNetworkingGoal,
+            profile_visibility: sanitizedProfileVisibility,
+          },
+          {
+            onConflict: "user_id",
+          }
+        )
+        .select()
+        .single();
 
-    navigate("/home");
-  }
+      if (error || !data) {
+        console.error("Supabase profile save error:", error);
+        alert("Failed to save profile. Please verify your information and try again.");
+        return;
+      }
+
+      const profileId = data.id;
+
+      // 4. Update profile skills
+      const { error: deleteError } = await supabase
+        .from("profile_skills")
+        .delete()
+        .eq("profile_id", profileId);
+
+      if (deleteError) {
+        console.error("Error deleting old profile skills:", deleteError);
+      }
+
+      const skillRows = selectedSkills.map((skillId) => ({
+        profile_id: profileId,
+        skill_id: skillId,
+      }));
+
+      const { error: insertError } = await supabase
+        .from("profile_skills")
+        .insert(skillRows);
+
+      if (insertError) {
+        console.error("Error inserting profile skills:", insertError);
+        alert("Failed to update skills. Please try again.");
+        return;
+      }
+
+      // 5. Sync AI Profile
+      const response = await fetch(`${APP_URL}/api/profile/sync-ai`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          profileId,
+        }),
+      });
+
+      if (!response.ok) {
+        let errorMsg = "Failed to sync AI profile.";
+        try {
+          const result = await response.json();
+          if (result.error) errorMsg = result.error;
+        } catch (_) {}
+        alert(errorMsg);
+        return;
+      }
+
+      // 6. Refresh profile in Context
+      await refreshProfile();
+
+      // 7. Navigate Home
+      navigate("/home");
+    } catch (err) {
+      console.error("Unexpected error during profile save:", err);
+      alert("An unexpected error occurred while saving your profile. Please try again.");
+    }
+  };
   return (
     <div
       className="min-h-screen relative overflow-hidden text-white px-6 py-10"

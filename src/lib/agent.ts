@@ -20,8 +20,10 @@ export async function sendMessageToAgent(
     throw new Error("Failed to contact AI Agent");
   }
 
-  const messages = await response.json();
+const result = await response.json();
 
+const messages = result.messages;
+const ui = result.ui;
   // --------------------------
   // Find the final assistant message
   // --------------------------
@@ -60,21 +62,28 @@ export async function sendMessageToAgent(
     }
   | undefined;
 
+if (
+  ui?.type === "searchPeople" &&
+  Array.isArray(ui.cards)
+) {
+  cards = ui.cards.map((card: any): FeedItem => ({
+    profileId: card.profile.id,
+    fullName: card.profile.full_name,
+    jobTitle: card.profile.job_title,
+    bio: card.profile.bio,
+    location: card.profile.location,
+    photoUrl: card.profile.photo_url,
+    similarity: card.similarity,
+    reason: card.explanation,
+  }));
+
+  console.log("Mapped cards:", cards);
+}
+
   const toolMessages = messages.filter((m: any) => m.role === "tool");
 
 for (const toolMessage of toolMessages) {
   if (!toolMessage.content) continue;
-
-  const recommendationResult = toolMessage.content.find(
-    (c: any) =>
-      c.type === "tool-result" &&
-      c.output?.type === "json" &&
-      Array.isArray(c.output.value)
-  );
-
-  if (recommendationResult) {
-    cards = recommendationResult.output.value;
-  }
 
   const introductionResult = toolMessage.content.find(
     (c: any) =>
